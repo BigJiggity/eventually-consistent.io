@@ -1,0 +1,190 @@
++++
+title = "Two Claude Plugins, One Source of Truth: Wiring GSD to Beads"
+date = 2026-06-19T00:00:00Z
+draft = false
+tags = ["claude", "tooling", "beads", "gsd", "workflow"]
+summary = "How working with Claude reshaped my workflow, the two plugins I can't work without, and the plugin I built to make them — and every issue tracker I touch — agree on one source of truth."
++++
+
+## Working with Claude changed how I work
+
+I've been doing this for 28 years. I've watched a lot of "this changes everything"
+tools come and go. Most didn't. Working with Claude did.
+
+The shift wasn't that it writes code for me — it's that the *unit of work*
+changed. I stopped thinking in keystrokes and started thinking in intent. I
+describe what I want, Claude drafts it, I review and steer, and the loop is
+fast enough that I stay in flow instead of context-switching into a dozen
+tools. Speed went up, but more importantly the *friction* went down — the
+tax I used to pay just to keep a project organized mostly disappeared.
+
+As I leaned in, I started exploring the plugin ecosystem. Most plugins are
+nice-to-haves. Two of them changed the way I run projects entirely:
+**Beads** and **GSD**.
+
+I needed both because I'm working solo right now. There's no team to hold the
+shape of a project in their heads, no standup to surface what's half-finished,
+no second set of eyes to catch the thread I dropped three days ago. When you're
+the only one on a project, *you* are the single point of failure for keeping it
+all straight — the plan, the open work, the decisions you made and why. That's
+exactly the kind of bookkeeping that quietly eats a solo developer alive. I
+didn't want a manager; I wanted the structure a good team gives you, without
+the team. Beads became my memory for the work, and GSD became the discipline
+that kept me from wandering — together they hold the project so I don't have to.
+
+## Beads — issues that live where the work lives
+
+[Beads](https://github.com/gastownhall/beads) (`bd`) is a local-first issue
+tracker. No web app, no tab to babysit — issues live in a database right next
+to your code and sync over your git remote. You drive it from the CLI (and so
+does Claude):
+
+```bash
+bd ready              # what's available to work on
+bd create "…"         # file an issue
+bd update <id> --claim   # claim + mark in-progress
+bd close <id>            # done
+bd prime                 # full workflow context for an agent
+```
+
+What made it click for me: because the issues are *local and structured*,
+Claude can read and write them directly as part of doing the work. The tracker
+stops being a place I go to update status and becomes a byproduct of the work
+itself. It even keeps a persistent memory (`bd remember`) so context survives
+across sessions.
+
+## GSD — turning intent into a plan, then into commits
+
+[GSD](https://github.com/) ("Get Shit Done") is a planning workflow. Where
+Beads tracks *what*, GSD structures *how*. It breaks a project into a roadmap
+of phases and walks each phase through a disciplined loop:
+
+```
+discuss → plan → execute → verify → ship
+```
+
+Each phase gets its own context, a researched plan, and a verification pass
+before anything is called done. The commands (`/gsd:new-project`,
+`/gsd:plan-phase`, `/gsd:execute-phase`, `/gsd:ship`) gave me something I'd
+never had consistently: a repeatable, spec-driven cadence that doesn't fall
+apart the moment a project gets big. Decisions get captured. Plans get
+checked. Work gets verified instead of just marked complete.
+
+## The premise: make them work together — and with everyone else's tracker
+
+Here's the thing. I had **two** great tools that didn't know about each other,
+and a third problem on top: not everyone I work with lives in Beads. They live
+in GitHub Issues. In Jira. In Asana. In Azure Boards.
+
+So I had three jobs to reconcile:
+
+1. GSD owned the *plan*. Beads owned the *work items*. They didn't talk.
+2. Beads was my source of truth, but stakeholders needed to see status in the
+   tool **they** already use.
+3. I refused to double-enter anything. Updating an issue in three places by
+   hand is exactly the friction Claude had just removed.
+
+## How I got here
+
+I started with Beads alone. It was great locally — but I kept wanting those
+issues mirrored into **GitHub** so collaborators could follow along without me
+narrating progress in Slack. So I started wiring Beads to GitHub by hand:
+create an issue, also open a GitHub issue; close one, close the other. It
+worked, and it was tedious, and tedious is a smell.
+
+Then I found GSD, and the picture got bigger. Now I had real *phases* and real
+*plans* — and it was obvious that each plan should close out the tracked work
+it advanced. The plan and the issues wanted to be the same thing. That's when
+the idea landed: stop hand-wiring this. Build a plugin that makes GSD and Beads
+work together natively, and while I'm at it, make Beads mirror to *any* tracker
+— not just GitHub.
+
+## The plugin: `gsd-beads`
+
+The result is a Claude Code plugin called **gsd-beads**. It's deliberately
+*thin glue* — it doesn't fork or replace Beads or GSD, it just makes them
+agree.
+
+**Linking GSD to Beads.** Each GSD phase maps its requirements to bd issues
+in a small map file; every issue carries a `phase-N` label; every plan declares
+the bd IDs it advances in its frontmatter. So when a phase is executed, the
+work it completes is claimed and closed in Beads automatically. The plan and
+the tracker stay in lockstep.
+
+**Mirroring Beads to everything else.** This is the part I'm happiest with.
+The design is **hub-and-spoke**: Beads is the single source of truth, and every
+external tool syncs to Beads — never tool-to-tool. That keeps the whole thing
+sane no matter how many trackers you add.
+
+```
+            push  (on create / claim / close)
+   bd  ───────────────────────────────────►  GitHub · GitLab · Jira · Asana · Azure
+  (hub)                                              (spokes)
+    ▲                                                   │
+    └───────────────────────────────────────────────────┘
+            pull  (on demand) — reconcile back into bd,
+            last-writer-wins by timestamp, conflicts logged
+```
+
+Two directions:
+
+- **Push** fires on Beads lifecycle events — create an issue, claim it, close
+  it, and the matching item is created/updated/closed in every enabled tool.
+- **Pull** runs on demand and reconciles edits made *in* those tools back into
+  Beads, using last-writer-wins by timestamp. Genuine both-sides-changed cases
+  get logged as conflicts for me to review instead of silently clobbered.
+
+Each tool is a small **adapter** behind a uniform contract, so adding a new
+tracker (Linear, Trello, whatever) is one file plus a config block — no changes
+to the core. Five ship today: GitHub, GitLab, Jira, Asana, and Azure Boards.
+
+Configuration lives in a committed `sync.json`, and — this matters — it only
+ever stores the **names** of the environment variables that hold your API
+tokens. No secrets on disk, ever:
+
+```json
+{
+  "type": "jira", "enabled": true, "adapter": "jira",
+  "config": {
+    "base_url": "https://yourorg.atlassian.net",
+    "project_key": "PROJ",
+    "email_env": "JIRA_EMAIL",
+    "token_env": "JIRA_API_TOKEN"
+  }
+}
+```
+
+Day to day, I barely think about it. I work in Beads (or let Claude do it as it
+executes a GSD phase), and the right things show up in GitHub or Jira on their
+own. When someone edits an issue on their end, a single `pull` brings it home.
+
+## Where to get it
+
+The plugin is open source (MIT) and lives here:
+
+- **GitHub:** [github.com/BigJiggity/claude-plugins](https://github.com/BigJiggity/claude-plugins)
+  (the `gsd-beads` plugin under `gsd+beads/`)
+
+Install it as a Claude Code marketplace:
+
+```text
+/plugin marketplace add BigJiggity/claude-plugins
+/plugin install gsd-beads@claude-plugins
+```
+
+> I'm also working on getting it listed in the Claude plugin marketplace so it's
+> a one-click install. Until then, the marketplace-add command above works
+> today.
+
+Full docs — architecture, the reconciliation algorithm, per-tool setup, and the
+adapter contract for adding your own — are in
+[`docs/sync.md`](https://github.com/BigJiggity/claude-plugins/blob/main/gsd%2Bbeads/docs/sync.md).
+
+## Why this matters to me
+
+The whole reason Claude changed my workflow is that it removed friction between
+*intent* and *done*. GSD and Beads each remove a different slice of that
+friction. Wiring them together — and out to wherever my collaborators
+actually live — removed the last bit I was still paying by hand.
+
+Opinions converge over time. So, apparently, do issue trackers.
