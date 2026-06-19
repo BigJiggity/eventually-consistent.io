@@ -180,6 +180,41 @@ Full docs — architecture, the reconciliation algorithm, per-tool setup, and th
 adapter contract for adding your own — are in
 [`docs/sync.md`](https://github.com/BigJiggity/claude-plugins/blob/main/gsd%2Bbeads/docs/sync.md).
 
+## It works solo — and it scales to a team
+
+I built this for a solo workflow, but the more I used it the more I realized the
+design is *better* for teams, not just tolerable for them. The same properties
+that keep one person straight are the ones that keep a group aligned.
+
+Because Beads syncs over your git remote, a team already shares it the moment
+they share the repo — no server to stand up, no SaaS seat to buy. Everyone
+works locally, `bd ready` shows each person what's open, and claiming an issue
+sets the assignee so two people don't grab the same thing. The tracker rides
+along with the code instead of living in a separate tab nobody updates.
+
+GSD gives the team the part that's hardest to maintain by hand: a *shared
+cadence*. The roadmap and per-phase plans are the same artifact everyone works
+from, decisions get captured in context instead of evaporating in chat, and
+because each plan declares the bd issues it advances, the work that ships is the
+work that gets closed. New teammates run `bd prime` and read the phase context
+to get up to speed in minutes instead of pestering whoever has the project in
+their head.
+
+And the hub-and-spoke sync is where it really pays off for a group, because no
+team lives entirely in one tool:
+
+- Engineers stay in Beads (or let Claude drive it as it executes a phase).
+- PMs and stakeholders watch **GitHub / Jira / Asana / Azure Boards** — whatever
+  they already use — and never have to learn Beads.
+- When someone updates a ticket on their side, a `pull` reconciles it back into
+  Beads, so the canonical record stays correct without anyone double-entering.
+- Mixed shops work too: front-end on a GitHub Project, the rest of the org on
+  Jira — Beads is the hub, both are spokes, and they don't fight.
+
+The net effect is the same thing it does for me solo, scaled up: nobody has to
+be the human integration layer between the plan, the work, and whatever tracker
+their teammates happen to prefer.
+
 ## Why this matters to me
 
 The whole reason Claude changed my workflow is that it removed friction between
