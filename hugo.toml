@@ -35,7 +35,7 @@ paginate = 10
   ShowWordCount = true
 
   [params.homeInfoParams]
-    Title = "Eventually Consistent \U0001F441"
+    Title = "Eventually Consistent <img src='/img/happymac.png' alt='Happy Mac' style='display:inline;height:0.95em;width:auto;vertical-align:-0.12em;margin-left:.25em;image-rendering:pixelated'>"
     Content = """
 This blog is where I write up the projects, the dead ends, and the tech I find worth explaining — cryptography, distributed systems, infrastructure-as-code, and developer tooling.
 
