@@ -1,0 +1,86 @@
+baseURL = "https://bigjiggity.github.io/eventually-consistent.io/"
+languageCode = "en-us"
+title = "Eventually Consistent"
+theme = "PaperMod"
+
+# Custom domain: when DNS for eventually-consistent.io points at GitHub Pages,
+# set baseURL = "https://eventually-consistent.io/" and add a static/CNAME file
+# containing that hostname. The CI build overrides baseURL with the Pages URL
+# automatically, so this value only matters for local `hugo serve`.
+
+enableRobotsTXT = true
+enableEmoji = true
+pygmentsUseClasses = true
+paginate = 10
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]   # JSON enables PaperMod search
+
+[params]
+  env = "production"
+  description = "Writing on cryptography, distributed systems, infrastructure, and agentic tooling."
+  author = "John Reed"
+  defaultTheme = "auto"            # light/dark/auto
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  ShowWordCount = true
+
+  [params.homeInfoParams]
+    Title = "Eventually Consistent \U0001F441"
+    Content = "Notes on cryptography, distributed systems, infrastructure-as-code, and the agentic tooling I build along the way. Opinions converge over time."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/BigJiggity"
+  [[params.socialIcons]]
+    name = "rss"
+    url = "index.xml"
+
+  [params.assets]
+    favicon = "/favicon.ico"
+    disableHLJS = true             # use Hugo's Chroma highlighter
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    codeFences = true
+    guessSyntax = true
+  [markup.goldmark.renderer]
+    unsafe = true                  # allow raw HTML in posts when needed
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
+  [[menu.main]]
+    identifier = "tags"
+    name = "Tags"
+    url = "/tags/"
+    weight = 20
+  [[menu.main]]
+    identifier = "archives"
+    name = "Archive"
+    url = "/archives/"
+    weight = 30
+  [[menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/search/"
+    weight = 40
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 50
