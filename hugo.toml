@@ -1,4 +1,4 @@
-baseURL = "https://bigjiggity.github.io/eventually-consistent.io/"
+baseURL = "https://www.eventually-consistent.io/"
 languageCode = "en-us"
 title = "Eventually Consistent"
 theme = "PaperMod"
