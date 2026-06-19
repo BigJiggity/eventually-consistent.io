@@ -1,0 +1,173 @@
+/* ============================================================
+   Aqua — a Mac OS X (10.0–10.4 era) restyle for PaperMod.
+   Pinstripes, Lucida Grande, glossy blue gel, window chrome.
+   ============================================================ */
+
+/* Lock to a light Aqua palette regardless of the theme toggle. */
+:root,
+html.dark {
+  --theme: transparent;        /* let the body pinstripe show */
+  --entry: #ffffff;
+  --primary: #1a2733;          /* near-black ink */
+  --secondary: #4a5b6b;
+  --tertiary: #d7e2ee;
+  --content: #1f2d3a;
+  --border: #b9c9d8;
+  --code-bg: #eef3f9;
+  --code-block-bg: #f3f6fb;
+
+  --aqua-blue: #2f7fd6;
+  --aqua-blue-dk: #1a5fb4;
+  --aqua-line: #9fb6cc;
+}
+
+/* ---- Base: pinstripe desktop + Lucida Grande ---- */
+html { background: #dbe6f1; }
+body {
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(255,255,255,0.55) 0, rgba(255,255,255,0.55) 1px,
+      rgba(210,224,238,0.55) 1px, rgba(210,224,238,0.55) 3px),
+    linear-gradient(#eaf1f8, #dce8f3);
+  color: var(--content);
+  font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Top menu bar: brushed/gel header ---- */
+.header {
+  background: linear-gradient(#fdfeff 0%, #eaf1f8 50%, #d4e2f0 51%, #e3eef8 100%);
+  border-bottom: 1px solid var(--aqua-line);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), 0 1px 2px rgba(0,0,0,0.08);
+}
+.nav { max-width: 820px; }
+.logo a {
+  color: #16324f;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+  font-weight: 700;
+}
+#menu a { color: #1f4b73; border-radius: 13px; }
+#menu a:hover {
+  background: linear-gradient(#6fb2f0, #1e6fd0);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 1px rgba(0,0,0,0.2);
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+}
+#menu .active {
+  color: #0f3a63;
+  border-bottom: 2px solid var(--aqua-blue);
+}
+
+/* ---- Content as an Aqua window with a title bar ---- */
+main.main {
+  position: relative;
+  margin-top: 2.2rem;
+  margin-bottom: 2.5rem;
+  padding: 3.4rem 2rem 2rem;
+  background: linear-gradient(#ffffff, #f3f7fc);
+  border: 1px solid #9db3c7;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 28px rgba(40,70,110,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+}
+/* title bar + traffic lights */
+main.main::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 32px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #9aafc2;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='14'%3E%3Cg stroke='rgba(0,0,0,0.25)'%3E%3Ccircle cx='7' cy='7' r='6' fill='%23ff5f57'/%3E%3Ccircle cx='29' cy='7' r='6' fill='%23febc2e'/%3E%3Ccircle cx='51' cy='7' r='6' fill='%2328c840'/%3E%3C/g%3E%3C/svg%3E") 14px center / 58px 14px no-repeat,
+    linear-gradient(#fbfdff, #dde7f1);
+}
+
+/* ---- Headings: engraved Aqua look ---- */
+.post-title,
+.entry-header h1,
+.entry-header h2,
+.first-entry .entry-header h1,
+h1, h2, h3 {
+  color: #14304b;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.85);
+}
+
+/* ---- Links: Aqua blue ---- */
+a { color: var(--aqua-blue); }
+a:hover { color: var(--aqua-blue-dk); }
+
+/* ---- Home hero ---- */
+.first-entry .entry-content,
+.home-info .entry-content { color: #33485c; }
+
+/* ---- Post list rows: gel panels ---- */
+.post-entry {
+  background: linear-gradient(#ffffff, #eef4fb);
+  border: 1px solid #c3d3e2;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+}
+.post-entry:hover {
+  border-color: var(--aqua-blue);
+  box-shadow: 0 0 0 3px rgba(47,127,214,0.30), 0 4px 10px rgba(40,70,110,0.18);
+  transform: translateY(-1px);
+}
+
+/* ---- Buttons / pagination: glossy gel lozenge ---- */
+.pagination a,
+.button,
+button,
+code.noClass,
+.post-tags a {
+  background: linear-gradient(#fdfeff, #d4e3f4);
+  border: 1px solid #8fb0d0;
+  border-radius: 14px;
+  color: #16324f;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 1px rgba(0,0,0,0.12);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+.post-tags a:hover,
+.pagination a:hover {
+  background: linear-gradient(#6fb2f0, #1e6fd0);
+  color: #fff;
+  border-color: #1a5fb4;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+}
+
+/* ---- Code: light Aqua panel ---- */
+.post-content pre,
+.post-content code {
+  border-radius: 8px;
+}
+.post-content pre {
+  border: 1px solid #c7d6e4;
+  box-shadow: inset 0 1px 3px rgba(40,70,110,0.10);
+}
+
+/* ---- Footer ---- */
+.footer {
+  color: #5a6b7b;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+}
+
+/* ---- Aqua scrollbar (WebKit) ---- */
+::-webkit-scrollbar { width: 15px; height: 15px; }
+::-webkit-scrollbar-track {
+  background: linear-gradient(90deg, #ccdaea, #e3edf6);
+  border-left: 1px solid #aebfd0;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 9px;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: linear-gradient(90deg, #aacbef, #2f7fd6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #8fbcec, #1a5fb4);
+}
+
+/* keep the Happy Mac crisp */
+.home-info img, .first-entry img[alt="Happy Mac"] { image-rendering: pixelated; }
