@@ -1,0 +1,83 @@
+/* ============================================================
+   Decorative theme: twinkling stars + circuit-trace frame.
+   Pure CSS/SVG, fixed, non-interactive, theme-aware, motion-safe.
+   Loaded automatically by PaperMod (assets/css/extended/*.css).
+   ============================================================ */
+
+:root {
+  --star: rgba(255, 255, 255, 0.85);
+  --circuit-opacity: 0.75;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --star: rgba(40, 60, 90, 0.5);
+    --circuit-opacity: 0.5;
+  }
+}
+
+/* Let the decorative layers show through the theme background. */
+html { background: var(--theme); }
+body { background: transparent !important; }
+
+/* --- Star layers (two, for parallax-ish depth) --- */
+html::before,
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* dense small stars */
+html::before {
+  z-index: -3;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 70% 60%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 40% 80%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 90% 22%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 55% 12%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 12% 65%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 82% 85%, var(--star) 99%, transparent),
+    radial-gradient(1px 1px at 35% 50%, var(--star) 99%, transparent);
+  animation: tw-a 5.5s ease-in-out infinite;
+}
+
+/* sparser, slightly larger stars, offset twinkle */
+body::before {
+  z-index: -2;
+  background-repeat: no-repeat;
+  background-image:
+    radial-gradient(1.6px 1.6px at 33% 25%, var(--star) 99%, transparent),
+    radial-gradient(1.6px 1.6px at 80% 70%, var(--star) 99%, transparent),
+    radial-gradient(1.6px 1.6px at 60% 45%, var(--star) 99%, transparent),
+    radial-gradient(1.6px 1.6px at 15% 88%, var(--star) 99%, transparent),
+    radial-gradient(1.6px 1.6px at 48% 92%, var(--star) 99%, transparent),
+    radial-gradient(1.6px 1.6px at 92% 48%, var(--star) 99%, transparent);
+  animation: tw-b 8s ease-in-out infinite;
+}
+
+@keyframes tw-a { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.95; } }
+@keyframes tw-b { 0%, 100% { opacity: 0.70; } 50% { opacity: 0.25; } }
+
+/* --- Circuit-trace frame around the viewport --- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 14px;                 /* float the frame inward from the viewport edge */
+  pointer-events: none;
+  z-index: -1;
+  border: 30px solid transparent;
+  border-image: url("/img/circuit.svg") 30 round;
+  opacity: var(--circuit-opacity);
+}
+@media (max-width: 640px) {
+  body::after { inset: 8px; border-width: 22px; }
+}
+
+/* Respect users who prefer reduced motion: keep the art, drop the twinkle. */
+@media (prefers-reduced-motion: reduce) {
+  html::before,
+  body::before { animation: none; opacity: 0.6; }
+}
