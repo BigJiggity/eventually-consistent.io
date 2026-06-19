@@ -36,7 +36,11 @@ paginate = 10
 
   [params.homeInfoParams]
     Title = "Eventually Consistent \U0001F441"
-    Content = "Notes on cryptography, distributed systems, infrastructure-as-code, and the agentic tooling I build along the way. Opinions converge over time."
+    Content = """
+This blog is where I write up the projects, the dead ends, and the tech I find worth explaining — cryptography, distributed systems, infrastructure-as-code, and developer tooling.
+
+The name is a distributed-systems joke and a posture: opinions here converge over time.
+"""
 
   [[params.socialIcons]]
     name = "github"
