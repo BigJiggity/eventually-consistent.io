@@ -16,7 +16,7 @@ will converge over time.
 ## What to expect
 
 - **Project write-ups** — what I built, why, and what broke.
-- **Deep dives** — ZK proofs, consensus, KMS, Terraform patterns.
+- **Deep dives** — Zen & the art of Technology, People and Tech, Architecture, IAC patterns, other Nerdery.
 - **Tooling** — the small things that make the work faster.
 
 ## It supports the things I need

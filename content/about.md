@@ -6,7 +6,7 @@ ShowReadingTime = false
 ShowWordCount = false
 +++
 
-I'm John Reed — I build distributed voting infrastructure: blockchain,
+I'm John Reed — 28 year veteran in tech, SysAdmin, Cloud Architecture, and AI advocate. Im currently tinkering with blockchain,
 zero-knowledge cryptography, compliance-driven Terraform, and the agentic
 tooling that keeps it all moving.
 
