@@ -1,6 +1,9 @@
 {{- /* Portable <img>: resolves src against baseURL so it works on a project
-        subpath (…/eventually-consistent.io/) and on a custom domain alike. */ -}}
-<img src="{{ .Get "src" | relURL }}"
+        subpath (…/eventually-consistent.io/) and on a custom domain alike.
+        Strip a leading slash first — relURL only prepends the base path when
+        the input is not already root-anchored. */ -}}
+{{- $src := .Get "src" | strings.TrimPrefix "/" -}}
+<img src="{{ $src | relURL }}"
      alt="{{ .Get "alt" }}"
      {{ with .Get "width" }}width="{{ . }}"{{ end }}
      {{ with .Get "style" }}style="{{ . | safeCSS }}"{{ end }}>
