@@ -1,0 +1,7 @@
+{{/* Custom <head> additions. */}}
+
+{{/* GoatCounter — privacy-friendly, cookieless analytics. Production only. */}}
+{{- if eq (hugo.Environment) "production" }}
+<script data-goatcounter="https://eventually-consistent.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+{{- end }}
