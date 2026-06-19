@@ -1,5 +1,5 @@
 +++
-title = "Hello, Eventually Consistent"
+title = "Hello World! Welcome to Eventually Consistent"
 date = 2026-06-19T00:00:00Z
 draft = false
 tags = ["meta"]
