@@ -1,0 +1,6 @@
+{{- /* Portable <img>: resolves src against baseURL so it works on a project
+        subpath (…/eventually-consistent.io/) and on a custom domain alike. */ -}}
+<img src="{{ .Get "src" | relURL }}"
+     alt="{{ .Get "alt" }}"
+     {{ with .Get "width" }}width="{{ . }}"{{ end }}
+     {{ with .Get "style" }}style="{{ . | safeCSS }}"{{ end }}>
