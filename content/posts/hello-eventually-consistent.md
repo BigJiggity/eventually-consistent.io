@@ -6,12 +6,12 @@ tags = ["meta"]
 summary = "Why this blog exists and what I'll write about here."
 +++
 
-Welcome. This is where I write up what I build and the tech I find worth
-explaining: cryptography, distributed systems, infrastructure-as-code, and the
-agentic tooling I lean on day to day.
+Welcome — glad you're here. Short version: this is where I write up what I
+build and the tech worth explaining — cryptography, distributed systems,
+infrastructure-as-code, and the agentic tooling I lean on day to day.
 
-The name is a distributed-systems joke — and a promise that the opinions here
-will converge over time.
+The name is a distributed-systems joke, and a bit of a promise: the opinions
+here converge over time.
 
 ## What to expect
 
@@ -32,4 +32,4 @@ if s.Cmp(halfN) == 1 {
 
 Inline `code`, callouts, tables, and a table of contents on longer posts.
 
-More soon.
+More to come...
