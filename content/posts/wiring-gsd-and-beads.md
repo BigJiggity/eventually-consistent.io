@@ -55,7 +55,7 @@ across sessions.
 
 ## GSD — turning intent into a plan, then into commits
 
-[GSD](https://github.com/) ("Get Shit Done") is a planning workflow. Where
+[GSD](https://github.com/gsd-build/get-shit-done) ("Get Shit Done") is a planning workflow. Where
 Beads tracks *what*, GSD structures *how*. It breaks a project into a roadmap
 of phases and walks each phase through a disciplined loop:
 
