@@ -12,7 +12,7 @@ summary = "How working with Claude reshaped my workflow, the two plugins I can't
 > integration: it now makes [context-mode](https://github.com/mksglu/context-mode)'s
 > memory *intent-aware*, not just GSD and Beads. The walkthrough below is the
 > original; skip to [**Update: meet Cairn**](#update-meet-cairn) for what's new.
-> The install is now `/plugin install cairn@claude-plugins`.
+> The install is now `/plugin install cairn@bigjiggity`.
 
 ## Working with Claude changed how I work
 
@@ -177,7 +177,7 @@ Install it as a Claude Code marketplace:
 
 ```text
 /plugin marketplace add BigJiggity/claude-plugins
-/plugin install cairn@claude-plugins
+/plugin install cairn@bigjiggity
 ```
 
 > I'm also working on getting it listed in the Claude plugin marketplace so it's
@@ -234,7 +234,7 @@ marker; the metaphor wrote itself. The install id, the commands, and the state
 dir moved with it:
 
 ```text
-/plugin install cairn@claude-plugins
+/plugin install cairn@bigjiggity
 /cairn:init        # was /gsd-beads:init
 ```
 
