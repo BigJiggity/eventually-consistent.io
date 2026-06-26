@@ -12,7 +12,12 @@ summary = "How working with Claude reshaped my workflow, the two plugins I can't
 > integration: it now makes [context-mode](https://github.com/mksglu/context-mode)'s
 > memory *intent-aware*, not just GSD and Beads. The walkthrough below is the
 > original; skip to [**Update: meet Cairn**](#update-meet-cairn) for what's new.
-> The install is now `/plugin install cairn@bigjiggity`.
+>
+> **Newer still:** installing Cairn now pulls the *whole stack* — GSD and
+> context-mode come with it as dependencies, and it bootstraps Beads on first
+> run — and everything is driven from one `/cairn:` command surface. There's a
+> full worked demo, too. Jump to
+> [**Batteries included, one door in**](#update-batteries-included-one-door-in).
 
 ## Working with Claude changed how I work
 
@@ -177,11 +182,14 @@ Install it as a Claude Code marketplace:
 
 ```text
 /plugin marketplace add BigJiggity/claude-plugins
-/plugin install cairn@bigjiggity
+/plugin marketplace add mksglu/context-mode    # cairn pulls context-mode from here
+/plugin install cairn@bigjiggity               # GSD + context-mode install with it
 ```
 
-> I'm also working on getting it listed in the Claude plugin marketplace so it's
-> a one-click install. Until then, the marketplace-add command above works
+> Installing Cairn now brings GSD and context-mode along automatically (they're
+> declared dependencies) and bootstraps Beads on first run — see
+> [**Batteries included**](#update-batteries-included-one-door-in) below. I'm also
+> working on a one-click marketplace listing; until then, the commands above work
 > today.
 
 Full docs — architecture, the reconciliation algorithm, per-tool setup, and the
@@ -269,6 +277,91 @@ opt in per repo, scope by label, never delete.
 The full write-up of the memory layer — the convention, the capability
 boundaries, and an honest list of what context-mode can and can't do — is in
 [`docs/context.md`](https://github.com/BigJiggity/claude-plugins/blob/main/cairn/docs/context.md).
+
+## Update: batteries included, one door in
+
+Two more rounds of polish since the rename, and they're the ones that change the
+day-to-day most.
+
+### One install, the whole stack
+
+For a while, getting started meant a chore list: install GSD, install Beads,
+install context-mode, *then* wire them. That's exactly the friction this whole
+project exists to kill — so I killed it. Cairn now **declares GSD and
+context-mode as dependencies**. Install Cairn and Claude pulls them in for you;
+the first time you open a project it offers to install the `bd` binary too. Then
+one command does the rest:
+
+```text
+/plugin marketplace add mksglu/context-mode   # one-time: where context-mode lives
+/plugin install cairn@bigjiggity              # GSD + context-mode come with it
+/cairn:init                                   # git + beads + first project, soup to nuts
+```
+
+While I was in there, context-mode graduated from an opt-in extra to a
+**default**. Intent-aware memory used to be a per-repo switch; now it's just on.
+The whole triad — plan, work, memory — comes alive the moment Cairn is installed.
+
+### One door in: the `/cairn:` interface
+
+The other thing that nagged me: I was still juggling three vocabularies. `bd`
+for tickets, `/gsd:*` for planning, `ctx_*` for memory. My fingers had to know
+which tool owned which verb. So I put one door in front of all of it.
+
+Everything now lives under `/cairn:`. The workflow verbs each drive the
+*combined* lifecycle, so you think in the work, not the tooling:
+
+```text
+/cairn:new          # plan the project + file every requirement as a ticket
+/cairn:plan 1       # plan a phase
+/cairn:work 1       # claim its tickets, execute, close them on success
+/cairn:status       # what's ready, what's blocked, where the roadmap stands
+/cairn:remember …   # …and /cairn:recall … — memory, scoped to the active task
+/cairn:ship         # won't ship with open tickets on a finished phase
+```
+
+A curated set of verbs can't cover *everything* three tools do, so there are
+escape hatches — `/cairn:bd`, `/cairn:gsd`, `/cairn:ctx` pass straight through to
+the raw tool. Nothing's locked away, and Cairn doesn't drift every time one of
+them grows a new command. `/cairn:help` prints the whole map.
+
+### A demo you can actually read
+
+Talking about a workflow only goes so far, so I built a real thing with it and
+wrote down every step. **wedding-register** is a small 3-tier AWS app — a React
+front end, a Node/Express API, MySQL, with the infrastructure as OpenTofu modules
+wired by Terragrunt (WAF, an ALB, an EC2 auto-scaling group, RDS). Nothing fancy;
+the *point* is the workflow around it.
+
+Every requirement became a Beads ticket across three phases, with real
+dependencies — you can't stand up the load balancer before the network, security
+groups, and database exist, and Beads knows it. Each ticket is mirrored to a
+public GitHub repo's Issues, carrying its phase label, so the hub-and-spoke sync
+isn't a diagram in a blog post — it's ten live issues you can click.
+
+- **The repo:** [github.com/BigJiggity/wedding-register](https://github.com/BigJiggity/wedding-register)
+- **The walkthrough:** [`HOWTO-CAIRN.md`](https://github.com/BigJiggity/wedding-register/blob/main/HOWTO-CAIRN.md) — the exact commands, start to ship.
+
+### So what does this actually buy you?
+
+**If you're a solo dev:** one install, one command surface, and the
+plan-work-memory triad on by default. You stop being the integration layer
+between your planner, your tracker, and your own memory — and you stop paying a
+setup tax every time you start something new. `/cairn:init` to a planned, tracked
+project in about a minute.
+
+**If you're on a team:** the same, plus the part teams actually feel. Beads rides
+along in the repo, so cloning *is* onboarding — one install brings the whole
+stack, and `bd prime` plus the phase context gets a new teammate productive
+without a single "can you walk me through the project?" The GitHub linking lets
+your PM watch real issues move without ever learning Beads, and nobody
+double-enters status. The plan everyone works from, the work that ships, and the
+issues that close are the *same* artifacts — which is the alignment a team
+usually pays a process tax to fake.
+
+It's still thin glue. It still doesn't fork or replace anything. It just means
+the trail is marked, the path is remembered, and there's one marker to follow —
+whether it's just you out there or the whole crew.
 
 ## Why this matters to me
 
