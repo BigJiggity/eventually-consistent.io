@@ -5,3 +5,38 @@
 <script data-goatcounter="https://eventually-consistent.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 {{- end }}
+
+{{/* "Recently updated" flash — for home-list entries flagged flashUpdated:true.
+     Teal accent (#35c9a6) to match the site art. Honors reduced-motion. */}}
+<style>
+  @keyframes ec-updated-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(53, 201, 166, 0); }
+    50%      { box-shadow: 0 0 0 4px rgba(53, 201, 166, 0.18); }
+  }
+  @keyframes ec-badge-glow {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.07); }
+  }
+  .updated-entry {
+    animation: ec-updated-pulse 2.2s ease-in-out infinite;
+    border-radius: 8px;
+  }
+  .updated-badge {
+    display: inline-block;
+    margin-left: 0.5em;
+    padding: 0.1em 0.55em;
+    font-size: 0.6em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    color: #06352b;
+    background: #35c9a6;
+    border-radius: 999px;
+    animation: ec-badge-glow 1.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .updated-entry { animation: none; }
+    .updated-badge { animation: none; opacity: 1; }
+  }
+</style>

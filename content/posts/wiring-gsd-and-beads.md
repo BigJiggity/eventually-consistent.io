@@ -3,6 +3,7 @@ title = "Building Cairn: Wiring GSD, Beads, and Context-Mode Together"
 date = 2026-06-19T00:00:00Z
 draft = false
 tags = ["claude", "tooling", "beads", "gsd", "cairn", "context-mode", "workflow"]
+flashUpdated = true   # home-list "Updated" badge + pulse; clear when no longer fresh
 summary = "How working with Claude reshaped my workflow, the two plugins I can't work without, and the plugin I built — now called Cairn — to make them, every issue tracker I touch, and my context-mode memory agree on one source of truth."
 +++
 
