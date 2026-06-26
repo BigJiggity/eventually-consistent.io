@@ -1,7 +1,7 @@
 +++
 title = "Containers: A Means to an End, Not the End-All-Be-All"
 date = 2026-06-22T00:00:00Z
-draft = true
+draft = false
 tags = ["containers", "docker", "kubernetes", "architecture", "infrastructure"]
 flashNew = true   # home-list gold "New!" badge + pulse; cleared a week after publish
 summary = "Containers solve a real, specific problem — and somewhere along the way we started treating them as the answer to every question. Here's the problem they actually fix, where they earn their keep, and when reaching for them is just cargo cult with a YAML accent."
