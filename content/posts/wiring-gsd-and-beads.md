@@ -2,9 +2,16 @@
 title = "Two Claude Plugins, One Source of Truth: Wiring GSD to Beads"
 date = 2026-06-19T00:00:00Z
 draft = false
-tags = ["claude", "tooling", "beads", "gsd", "workflow"]
-summary = "How working with Claude reshaped my workflow, the two plugins I can't work without, and the plugin I built to make them — and every issue tracker I touch — agree on one source of truth."
+tags = ["claude", "tooling", "beads", "gsd", "cairn", "context-mode", "workflow"]
+summary = "How working with Claude reshaped my workflow, the two plugins I can't work without, and the plugin I built — now called Cairn — to make them, every issue tracker I touch, and my context-mode memory agree on one source of truth."
 +++
+
+> **Update — June 2026:** Since I first wrote this, the plugin got a real name —
+> **[Cairn](https://github.com/BigJiggity/claude-plugins)** — and a third
+> integration: it now makes [context-mode](https://github.com/mksglu/context-mode)'s
+> memory *intent-aware*, not just GSD and Beads. The walkthrough below is the
+> original; skip to [**Update: meet Cairn**](#update-meet-cairn) for what's new.
+> The install is now `/plugin install cairn@claude-plugins`.
 
 ## Working with Claude changed how I work
 
@@ -163,13 +170,13 @@ own. When someone edits an issue on their end, a single `pull` brings it home.
 The plugin is open source (MIT) and lives here:
 
 - **GitHub:** [github.com/BigJiggity/claude-plugins](https://github.com/BigJiggity/claude-plugins)
-  (the `gsd-beads` plugin under `gsd+beads/`)
+  (the `cairn` plugin under `cairn/` — see the update below on the rename)
 
 Install it as a Claude Code marketplace:
 
 ```text
 /plugin marketplace add BigJiggity/claude-plugins
-/plugin install gsd-beads@claude-plugins
+/plugin install cairn@claude-plugins
 ```
 
 > I'm also working on getting it listed in the Claude plugin marketplace so it's
@@ -178,7 +185,7 @@ Install it as a Claude Code marketplace:
 
 Full docs — architecture, the reconciliation algorithm, per-tool setup, and the
 adapter contract for adding your own — are in
-[`docs/sync.md`](https://github.com/BigJiggity/claude-plugins/blob/main/gsd%2Bbeads/docs/sync.md).
+[`docs/sync.md`](https://github.com/BigJiggity/claude-plugins/blob/main/cairn/docs/sync.md).
 
 ## It works solo — and it scales to a team
 
@@ -214,6 +221,53 @@ team lives entirely in one tool:
 The net effect is the same thing it does for me solo, scaled up: nobody has to
 be the human integration layer between the plan, the work, and whatever tracker
 their teammates happen to prefer.
+
+## Update: meet Cairn
+
+A few weeks of living with this taught me two things, and both are now shipped.
+
+**It earned a name.** `gsd-beads` described the wiring, not the idea. The idea is
+a marker you stack as you go — one that both shows the trail *and* remembers the
+path you took. So I renamed it **Cairn**. Plan → work → memory, stacked into one
+marker; the metaphor wrote itself. The install id, the commands, and the state
+dir moved with it:
+
+```text
+/plugin install cairn@claude-plugins
+/cairn:init        # was /gsd-beads:init
+```
+
+**It learned to manage memory.** This is the part I'm most excited about. I'd
+been leaning hard on [context-mode](https://github.com/mksglu/context-mode) — a
+plugin that keeps raw tool output *out* of the conversation by compressing it
+into a local, searchable knowledge base. Brilliant at compression, but
+architecturally blind: it decides what to keep by size and age, not by what the
+work actually needs. It'll just as happily surface a stale log as the one
+compiler error that explains the bug in front of you.
+
+Cairn already knew two things context-mode didn't — which Beads issue is active,
+and which GSD phase you're in. So I wired them together. Now the compressed
+memory is **scoped to intent**:
+
+- Everything indexed while an issue is active gets labeled with that issue and
+  phase (`gb/<bd_id>/<phase>`), so recall is filtered to the task in front of
+  you instead of the whole session's noise.
+- On a phase boundary — Execute → Verify, say — the active scope switches to the
+  new phase, and the previous phase's noise drops out of the lens. Nothing is
+  *deleted*: context-mode can only purge by whole session or whole project, so I
+  never let it. Isolation is by label, not by destruction.
+- When token usage crosses a threshold, Cairn nudges me to split the active
+  issue into smaller sub-tasks — a natural context reset before the window
+  starts to degrade.
+
+So the stack is three deep now: **GSD** holds the phase, **Beads** holds the
+task, and **context-mode** holds the memory of doing it — and Cairn is the
+thread that makes the third one aware of the first two. It stays *thin glue*:
+opt in per repo, scope by label, never delete.
+
+The full write-up of the memory layer — the convention, the capability
+boundaries, and an honest list of what context-mode can and can't do — is in
+[`docs/context.md`](https://github.com/BigJiggity/claude-plugins/blob/main/cairn/docs/context.md).
 
 ## Why this matters to me
 
