@@ -23,16 +23,20 @@
   }
   .updated-badge {
     display: inline-block;
+    align-self: center;        /* h2 is a flexbox — don't stretch to title height */
+    flex: 0 0 auto;
     margin-left: 0.5em;
-    padding: 0.1em 0.55em;
-    font-size: 0.6em;
+    padding: 0.18em 0.5em;
+    font-size: 0.62rem;        /* fixed size — don't scale off the big heading */
+    line-height: 1.25;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    white-space: nowrap;       /* keep "UPDATED" on one line — no wrap-into-a-blob */
     vertical-align: middle;
     color: #06352b;
     background: #35c9a6;
-    border-radius: 999px;
+    border-radius: 6px;        /* tidy pill, not a circle */
     animation: ec-badge-glow 1.6s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
