@@ -67,6 +67,10 @@
 {{- if .Param "flashUpdated" }}
 {{- $class = printf "%s updated-entry" $class }}
 {{- end }}
+{{- /* Flash brand-new posts (frontmatter: flashNew = true). */}}
+{{- if .Param "flashNew" }}
+{{- $class = printf "%s new-entry" $class }}
+{{- end }}
 
 <article class="{{ $class }}">
   {{- $isHidden := (.Param "cover.hiddenInList") | default (.Param "cover.hidden") | default false }}
@@ -74,6 +78,9 @@
   <header class="entry-header">
     <h2 class="entry-hint-parent">
       {{- .Title }}
+      {{- if .Param "flashNew" }}
+      <span class="new-badge" title="New post">New!</span>
+      {{- end }}
       {{- if .Param "flashUpdated" }}
       <span class="updated-badge" title="Recently updated">Updated</span>
       {{- end }}

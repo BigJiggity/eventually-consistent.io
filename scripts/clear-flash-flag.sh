@@ -5,35 +5,49 @@
 # 2026-06-26           #
 ########################
 
-# Removes the home-list "flashUpdated" flag from a post once it's no longer
-# fresh, then commits + pushes so CI redeploys without the badge/pulse.
-# Idempotent: if the flag is already gone, it does nothing.
+# Removes home-list "flash" flags (flashUpdated / flashNew) from posts once
+# they're no longer fresh, then commits + pushes so CI redeploys without the
+# badge/pulse. Idempotent: if no flags are present, it does nothing.
 #
-# Usage: clear-flash-flag.sh [path/to/post.md]
-#   defaults to the Cairn post.
+# Usage: clear-flash-flag.sh [post.md ...]
+#   With no args, clears both currently-flashing posts.
 
 set -euo pipefail
 
 REPO="/Users/jsreed/repos/eventually-consistent.io"
-POST="${1:-$REPO/content/posts/wiring-gsd-and-beads.md}"
-
 cd "$REPO"
 
-# Nothing to do if the flag isn't there (idempotent — safe to re-run).
-if ! grep -q '^flashUpdated[[:space:]]*=' "$POST"; then
-  echo "no flashUpdated flag in $POST... nothing to do."
+# Default targets: every post that can currently be flashing.
+if [ "$#" -gt 0 ]; then
+  POSTS=("$@")
+else
+  POSTS=(
+    "$REPO/content/posts/wiring-gsd-and-beads.md"
+    "$REPO/content/posts/containers-a-means-to-an-end.md"
+  )
+fi
+
+changed=()
+for post in "${POSTS[@]}"; do
+  [ -f "$post" ] || { echo "skip (missing): $post"; continue; }
+  if grep -qE '^flash(Updated|New)[[:space:]]*=' "$post"; then
+    echo "clearing flash flag(s) from $post..."
+    sed -i '' -E '/^flash(Updated|New)[[:space:]]*=/d' "$post"
+    git add "$post"
+    changed+=("$post")
+  fi
+done
+
+if [ "${#changed[@]}" -eq 0 ]; then
+  echo "no flash flags found... nothing to do."
   exit 0
 fi
 
-echo "clearing flashUpdated flag from $POST..."
-sed -i '' '/^flashUpdated[[:space:]]*=/d' "$POST"
-
-git add "$POST"
 git commit -F - <<'MSG'
-content(wiring): clear home-list flashUpdated flag (no longer fresh)
+content: clear home-list flash flags (no longer fresh)
 
-Scheduled cleanup — drops the "Updated" badge + pulse from the home list now
-that the post has been live for a week.
+Scheduled cleanup — drops the "New!" / "Updated" badge + pulse from the home
+list now that these posts have been live for a week.
 
 Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 MSG
@@ -41,4 +55,4 @@ MSG
 git pull --rebase --autostash origin main || true
 git push origin main
 
-echo "flag cleared + pushed."
+echo "cleared ${#changed[@]} post(s) + pushed."
