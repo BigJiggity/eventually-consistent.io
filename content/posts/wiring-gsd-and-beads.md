@@ -1,5 +1,5 @@
 +++
-title = "Two Claude Plugins, One Source of Truth: Wiring GSD to Beads"
+title = "Building Cairn: Wiring GSD, Beads, and Context-Mode Together"
 date = 2026-06-19T00:00:00Z
 draft = false
 tags = ["claude", "tooling", "beads", "gsd", "cairn", "context-mode", "workflow"]
