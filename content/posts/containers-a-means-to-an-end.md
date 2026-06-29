@@ -15,8 +15,8 @@ Quick question before we start: what problem does a container actually solve?
 Hold that thought, because if you can't answer it cleanly, you're about to
 spend a weekend writing a `Dockerfile`, a `docker-compose.yml`, a Helm chart,
 and three GitHub Actions workflows to deploy a static site that an `rsync` and
-a cron job would've handled in an afternoon. I've done it. You've probably done
-it. Let's talk about why.
+a cron job would've handled in an afternoon. 28 years in, and I've *still* done
+it. You've probably done it too. Let's talk about why.
 
 ## The one problem containers were built to solve
 
@@ -119,8 +119,10 @@ antipattern. And it's not a free one. It costs you on two ledgers at once:
   a slice of a node (or a whole node it half-uses), maybe its own load balancer,
   its share of the control plane and the logging/metrics pipeline behind it. Ten
   services that each idle at 4% don't cost you 4% — they cost you ten reserved
-  seats at the table. I've watched a cluster bill quietly lap the actual
-  compute it was doing.
+  seats at the table. I spent a chunk of my career on AWS cost optimization —
+  FinOps work that clawed back seven figures — and I've watched a Kubernetes
+  bill quietly lap the actual compute it was doing. Overprovisioning isn't
+  hypothetical; it's a line item I've gone hunting for.
 - **Manpower.** This is the one that gets underestimated. Every image is a
   standing obligation: a base image to keep patched, a CVE scan that will
   eventually go red at 4:45 on a Friday, a build to keep green, a deployment to
