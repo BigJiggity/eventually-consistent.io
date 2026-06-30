@@ -37,9 +37,18 @@ paginate = 10
   TocOpen = false
   ShowWordCount = true
 
+  # Brand mark in the top-left nav — the glass sphere, sized small next to the
+  # wordmark. Icon is resolved through Hugo's asset pipeline (assets/img/...).
+  [params.label]
+    text = "Eventually Consistent"
+    icon = "img/logo-sphere.png"
+    iconHeight = 26
+
   [params.homeInfoParams]
-    Title = "Eventually Consistent <img src='/img/happymac.png' alt='Happy Mac' style='display:inline;height:0.95em;width:auto;vertical-align:-0.12em;margin-left:.25em;image-rendering:pixelated'>"
+    Title = "Eventually Consistent"
     Content = """
+<div class="ec-hero"><img class="ec-hero-sphere" src="/img/logo-sphere.png" alt="Eventually Consistent — a glass sphere converging blue to green" width="160" height="160"></div>
+
 This blog is where I write up the projects, the dead ends, and the tech I find worth explaining — cryptography, distributed systems, infrastructure-as-code, and developer tooling.
 
 The name is a distributed-systems joke and a posture: opinions here converge over time.
@@ -54,6 +63,11 @@ The name is a distributed-systems joke and a posture: opinions here converge ove
 
   [params.assets]
     favicon = "/favicon.ico"
+    favicon16x16 = "/img/favicon-16.png"
+    favicon32x32 = "/img/favicon-32.png"
+    apple_touch_icon = "/img/apple-touch-icon.png"
+    theme_color = "#2f7fd6"        # Aqua blue — mobile browser chrome
+    msapplication_TileColor = "#2f7fd6"
     disableHLJS = true             # use Hugo's Chroma highlighter
 
 [markup]
